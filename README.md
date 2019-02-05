@@ -1,6 +1,6 @@
 # scala_example
 Examples in scala language I find interesting
 
-## Scala Set
+### Scala Set
 
-## Scala Tail Recursion
+### Scala Tail Recursion
