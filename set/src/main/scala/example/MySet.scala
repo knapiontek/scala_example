@@ -8,11 +8,14 @@ sealed trait MySet[A] extends (A => Boolean) {
 
   def contains(elem: A): Boolean
   def +(elem: A): MySet[A]
+  def -(elem: A): MySet[A]
   def ++(anotherSet: MySet[A]): MySet[A]
+  def --(anotherSet: MySet[A]): MySet[A]
   def map[B](f: A => B): MySet[B]
   def flatMap[B](f: A => MySet[B]): MySet[B]
   def filter(predicate: A => Boolean): MySet[A]
   def foreach(f: A => Unit): Unit
+  def &(anotherSet: MySet[A]): MySet[A]
 }
 
 object MySet {
@@ -32,11 +35,14 @@ object MySet {
 final class Sentinel[A] extends MySet[A] {
   def contains(elem: A): Boolean = false
   def +(elem: A): MySet[A] = new NotEmptySet[A](elem, this)
-  def ++(other: MySet[A]): MySet[A] = other
+  def -(elem: A): MySet[A] = this
+  def ++(anotherSet: MySet[A]): MySet[A] = anotherSet
+  def --(anotherSet: MySet[A]): MySet[A] = this
   def map[B](f: A => B): MySet[B] = new Sentinel[B]
   def flatMap[B](f: A => MySet[B]): MySet[B] = new Sentinel[B]
   def filter(predicate: A => Boolean): MySet[A] = this
   def foreach(f: A => Unit): Unit = ()
+  def &(anotherSet: MySet[A]): MySet[A] = this
 }
 
 class NotEmptySet[A](head: A, tail: MySet[A]) extends MySet[A] {
@@ -48,7 +54,12 @@ class NotEmptySet[A](head: A, tail: MySet[A]) extends MySet[A] {
     if(contains(elem)) this
     else new NotEmptySet[A](elem, this)
   }
+  override def -(elem: A): MySet[A] = {
+    if(elem == head) tail
+    else tail - elem + head
+  }
   override def ++(anotherSet: MySet[A]): MySet[A] = tail ++ anotherSet + head
+  override def --(anotherSet: MySet[A]): MySet[A] = filter(anotherSet)
   override def map[B](f: A => B): MySet[B] = tail.map(f) + f(head)
   override def flatMap[B](f: A => MySet[B]): MySet[B] = f(head) ++ tail.flatMap(f)
   override def filter(predicate: A => Boolean): MySet[A] = {
@@ -60,4 +71,5 @@ class NotEmptySet[A](head: A, tail: MySet[A]) extends MySet[A] {
     f(head)
     tail.foreach(f)
   }
+  def &(anotherSet: MySet[A]): MySet[A] = filter(anotherSet)
 }
