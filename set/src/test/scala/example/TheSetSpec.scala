@@ -2,7 +2,7 @@ package example
 
 import org.scalatest._
 
-class CollectionSpec extends FlatSpec with Matchers {
+class TheSetSpec extends FlatSpec with Matchers {
 	"The MySet" should "return some values" in {
 		println("Hello")
 		val s = TheSet(1,2,3,4)
