@@ -29,18 +29,18 @@ object TheSet {
         build(seq.tail, acc + seq.head)
     }
 
-    build(elem.toSeq, new Sentinel[A])
+    build(elem.toSeq, new SetSentinel[A])
   }
 }
 
-final class Sentinel[A] extends TheSet[A] {
+final class SetSentinel[A] extends TheSet[A] {
   def contains(elem: A): Boolean = false
   def +(elem: A): TheSet[A] = new ElementSet[A](elem, this)
   def -(elem: A): TheSet[A] = this
   def ++(anotherSet: TheSet[A]): TheSet[A] = anotherSet
   def --(anotherSet: TheSet[A]): TheSet[A] = this
-  def map[B](f: A => B): TheSet[B] = new Sentinel[B]
-  def flatMap[B](f: A => TheSet[B]): TheSet[B] = new Sentinel[B]
+  def map[B](f: A => B): TheSet[B] = new SetSentinel[B]
+  def flatMap[B](f: A => TheSet[B]): TheSet[B] = new SetSentinel[B]
   def filter(predicate: A => Boolean): TheSet[A] = this
   def foreach(f: A => Unit): Unit = ()
   def &(anotherSet: TheSet[A]): TheSet[A] = this
