@@ -70,8 +70,3 @@ object TheStream {
 		new TheStream(start, from(generator(start))(generator))
 	}
 }
-
-object Playground extends App {
-	val naturals = TheStream.from(1)(_ + 1)
-	print(naturals.take(10).toList())
-}
