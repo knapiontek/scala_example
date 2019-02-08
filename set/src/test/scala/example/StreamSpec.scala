@@ -14,4 +14,28 @@ class StreamSpec extends FlatSpec with Matchers {
 		println(diff.sum)
 		assert(diff.sum == 0)
 	}
+
+	it should "generate fibonacci series" in {
+		def fibonacci(x: Int, y: Int): TheStream[Int] = {
+			new TheStream[Int](x, fibonacci(y, x + y))
+		}
+
+		val fibo1 = fibonacci(1, 2).take(10).toList()
+		val fibo2 = List(1, 2, 3, 5, 8, 13, 21, 34, 55, 89)
+
+		println(fibo1)
+		assert(fibo1 == fibo2)
+	}
+
+	it should "generate prime numbers" in {
+		def prime(start: Int): TheStream[Int] = {
+			new TheStream[Int](start, prime(start + 1).filter(_ % start != 0))
+		}
+
+		val prime1 = prime(start=2).take(10).toList()
+		val prime2 = List(2, 3, 5, 7, 11, 13, 17, 19, 23, 29)
+
+		println(prime1)
+		assert(prime1 == prime2)
+	}
 }
