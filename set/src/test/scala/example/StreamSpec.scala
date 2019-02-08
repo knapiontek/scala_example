@@ -38,4 +38,15 @@ class StreamSpec extends FlatSpec with Matchers {
 		println(prime1)
 		assert(prime1 == prime2)
 	}
+
+	it should "generate fibonacci numbers too" in {
+		scala.collection.immutable.Stream
+		lazy val fibs: Stream[Int] = 1 #:: 2 #:: fibs.zip(fibs.tail).map { n => n._1 + n._2 }
+
+		val fibo1 = fibs.take(10).toList
+		val fibo2 = List(1, 2, 3, 5, 8, 13, 21, 34, 55, 89)
+
+		println(fibo1)
+		assert(fibo1 == fibo2)
+	}
 }
